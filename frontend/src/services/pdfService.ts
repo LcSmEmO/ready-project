@@ -1,23 +1,23 @@
-import axios from "axios";
+import axios from 'axios';
 
-// Lê a variável de ambiente do Vite. Se não existir, usa o caminho relativo '/api'
-// Força o TypeScript a entender o import.meta como 'any' temporariamente
-const API_URL = (import.meta as any).env.VITE_API_URL || '/api';
+const api = axios.create({
+  // 1. Corrigido de efnv para env
+  baseURL: import.meta.env.VITE_API_URL || 'https://ready-project-ko70.onrender.com'
+});
+
+export default api;
 
 export const uploadPdf = async (file: File) => {
   const formData = new FormData();
   formData.append("pdf", file);
 
-  // Agora a URL fica dinâmica usando a variável de ambiente
-  const response = await axios.post(
-    `${API_URL}/upload-pdf`,
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+  // 2. Corrigido para usar a instância "api" que criamos lá em cima.
+  // Como a baseURL já está configurada nela, basta colocar a rota '/upload-pdf' direto!
+  const response = await api.post('/upload-pdf', formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 
   return response.data;
 };

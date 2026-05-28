@@ -20,14 +20,17 @@ const app = express();
 const PORT = 3001;
 const JWT_SECRET = process.env.JWT_SECRET || "ready-dev-secret";
 
-// Configuração explícita do CORS para liberar o Front-end na Vercel e testes locais
-app.use(
-  cors({
-    origin: "*", // Permite que qualquer origem (Vercel, localhost, etc.) acesse a API
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+
+// Libera o acesso para o seu domínio da Vercel e mantém o localhost para testes locais
+app.use(cors({
+  origin: [
+    'https://ready-project.vercel.app', 
+    'http://localhost:5173', // Porta padrão do Vite
+    'http://localhost:3000'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
