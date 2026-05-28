@@ -10,46 +10,31 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-
-  // Função para lidar com o envio do formulário de login
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError("");
+    e.preventDefault();
+    setError("");
 
-  try {
-    setIsLoading(true);
+    try {
+      setIsLoading(true);
+      const baseUrl = import.meta.env.VITE_API_URL || 'https://ready-project-ko70.onrender.com';
+      const response = await fetch(`${baseUrl}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const response = await fetch("http://localhost:3001/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Erro ao fazer login.");
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || "Erro ao fazer login.");
+      localStorage.setItem("ready_token", data.token);
+      localStorage.setItem("ready_user", JSON.stringify(data.user));
+      navigate("/library");
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Erro ao fazer login.");
+    } finally {
+      setIsLoading(false);
     }
-
-    localStorage.setItem("ready_token", data.token);
-    localStorage.setItem("ready_user", JSON.stringify(data.user));
-
-    navigate("/library");
-  } catch (error) {
-    setError(
-      error instanceof Error
-        ? error.message
-        : "Erro ao fazer login."
-    );
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6">
@@ -83,37 +68,24 @@ const Login = () => {
                 className="w-full px-4 py-3 pr-12 bg-secondary rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:shadow-focus-ring transition-smooth"
                 required
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground transition-smooth"
-              >
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground transition-smooth">
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
           </div>
           
           {error && (
-            <p className="text-sm text-destructive bg-destructive/10 rounded-lg px-4 py-3">
-              {error}
-            </p>
+            <p className="text-sm text-destructive bg-destructive/10 rounded-lg px-4 py-3">{error}</p>
           )}
 
-         <button
-          type="submit"
-          disabled={isLoading}
-          className="w-full py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:opacity-90 transition-smooth disabled:opacity-60 disabled:cursor-not-allowed"
-        >
-          {isLoading ? "Entrando..." : "Entrar"}
-        </button>
-        
+          <button type="submit" disabled={isLoading} className="w-full py-3 bg-primary text-primary-foreground rounded-xl font-medium hover:opacity-90 transition-smooth disabled:opacity-60 disabled:cursor-not-allowed">
+            {isLoading ? "Entrando..." : "Entrar"}
+          </button>
         </form>
 
         <p className="text-center text-sm text-muted-foreground">
           Não tem uma conta?{" "}
-          <Link to="/register" className="text-primary font-medium hover:underline">
-            Criar conta
-          </Link>
+          <Link to="/register" className="text-primary font-medium hover:underline">Criar conta</Link>
         </p>
       </div>
     </div>

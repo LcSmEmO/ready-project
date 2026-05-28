@@ -26,7 +26,8 @@ const Register = () => {
   try {
     setIsLoading(true);
 
-    const response = await fetch("http://localhost:3001/auth/register", {
+    const baseUrl = import.meta.env.VITE_API_URL || 'https://ready-project-ko70.onrender.com';
+    const response = await fetch(`${baseUrl}/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
