@@ -20,7 +20,14 @@ const app = express();
 const PORT = 3001;
 const JWT_SECRET = process.env.JWT_SECRET || "ready-dev-secret";
 
-app.use(cors());
+// Configuração explícita do CORS para liberar o Front-end na Vercel e testes locais
+app.use(
+  cors({
+    origin: "*", // Permite que qualquer origem (Vercel, localhost, etc.) acesse a API
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
