@@ -1,78 +1,57 @@
-# read.y
-Plataforma Web para Leitura Adaptativa e Processamento de Documentos
-Trabalho de Conclusão de Curso · 2026
+# read.y — Plataforma Web de Leitura Adaptativa Inteligente
 
-## Sobre o Projeto
-O **read.y** é uma aplicação web full-stack desenvolvida para transformar a experiência de leitura e estudo de livros e documentos acadêmicos. A plataforma permite que os usuários façam o upload de arquivos PDF, que são automaticamente processados, estruturados em blocos de texto nativos e integrados a um ecossistema inteligente auxiliado por inteligência artificial.
+> Trabalho de Conclusão de Curso (TCC) apresentado ao curso de Bacharelado em Sistemas de Informação — 2026.
 
-A grande motivação do projeto é resolver a quebra de fluidez e acessibilidade no consumo de materiais digitais densos. Centralizando o armazenamento de documentos, a extração de conteúdo limpo e a assistência por IA em uma interface fluida, o read.y transforma arquivos estáticos em uma experiência interativa de aprendizado.
-
-🔗 [Acessar aplicação em produção](https://ready-project.vercel.app)
+O **read.y** é um ecossistema web *full-stack* projetado para revolucionar a forma como estudantes e pesquisadores consomem documentos acadêmicos e livros digitais densos. A plataforma quebra a barreira estática do formato PDF tradicional, convertendo-o em um ambiente de leitura dinâmico, adaptativo e integrado a modelos de Inteligência Artificial Generativa.
 
 ---
 
-## Principais Funcionalidades
-
-### Para o usuário (Leitor)
-* **Upload e Leitura Adaptativa:** Suporte a upload temporário (leitura rápida) e upload oficial integrado ao perfil do usuário.
-* **Processamento Estruturado de PDF:** Divisão automática do documento em blocos semânticos (títulos, parágrafos e notas de rodapé) com limpeza de ruídos e hífens.
-* **Assistência Inteligente com Gemini:** Integração direta com a API do Google Gemini para suporte ao leitor, permitindo interações contextuais com o conteúdo do documento.
-* **Painel de Progresso e Biblioteca:** Acompanhamento da página atual, percentual de rolagem, controle de leitura e gerenciamento de arquivos favoritos.
-
----
-
-## Stack Tecnológica
-
-### Backend (Node.js)
-* **Runtime:** Node.js 18+
-* **Framework:** Express
-* **ORM:** Prisma
-* **Autenticação:** JWT (JsonWebToken) & BcryptJS
-* **Uploads:** Multer & Form-Data
-* **IA SDK:** Google GenAI SDK (Gemini API)
-
-### Processador de PDF (Python)
-* **Framework:** FastAPI
-* **Servidor:** Uvicorn
-* **Motor de Extração:** pypdf (Leitura assíncrona, extração de texto e normalização de ligaduras)
-
-### Frontend
-* **Core:** React 18 · Vite · TypeScript
-* **Estilização:** TailwindCSS · shadcn/ui
-* **Navegação:** React Router v7
-* **Iconografia:** Lucide React
-
-### Infraestrutura
-* **Vercel:** Hospedagem do Frontend Estático (`ready-project.vercel.app`).
-* **Render (Node Service):** Hospedagem do servidor principal em Node.js (`ready-project-ko70.onrender.com`).
-* **Render (Python Service):** Hospedagem da API isolada de processamento de PDFs (`ready-pdf-processor.onrender.com`).
-* **GitHub:** Controle de versão unificado e deploys contínuos baseados na branch `main`.
+## 📌 Índice
+* [Visão Geral e Motivação](#-visão-geral-e-motivação)
+* [Arquitetura do Sistema e Fluxo de Dados](#-arquitetura-do-sistema-e-fluxo-de-dados)
+* [Principais Funcionalidades](#-principais-funcionalidades)
+* [Stack Tecnológica e Justificativas](#-stack-tecnológica-e-justificativas)
+* [Estrutura do Projeto](#-estrutura-do-projeto)
+* [Configuração e Execução Local](#-configuração-e-execução-local)
+* [Endpoints e Comunicação entre Serviços](#-endpoints-e-comunicação-entre-serviços)
+* [Otimizações de Infraestrutura (Case Render vs RAM)](#-otimizações-de-infraestrutura-case-render-vs-ram)
+* [Autores e Licença](#-autores-e-licença)
 
 ---
 
-## Estrutura do Repositório
+## 🎯 Visão Geral e Motivação
+
+O consumo de materiais digitais em PDF frequentemente esbarra em problemas de acessibilidade, falta de fluidez e fadiga visual. Além disso, a extração de dados brutos desses arquivos costuma trazer ruídos textuais (como hífens órfãos de quebras de linha e símbolos corrompidos).
+
+O **read.y** resolve esse problema atuando em três frentes:
+1. **Normalização Semântica:** Um microsserviço limpa o texto do documento e o separa logicamente em blocos de parágrafos, títulos e notas de rodapé.
+2. **Interface Adaptativa:** O leitor renderiza esses blocos nativamente, permitindo controle total de progresso, favoritação e marcação de página.
+3. **Cognição Assistida:** O usuário pode interagir diretamente com o conteúdo do livro por meio de um chat contextualizado alimentado por IA.
+
+---
+
+## 🏗️ Arquitetura do Sistema e Fluxo de Dados
+
+A aplicação adota uma arquitetura descentralizada baseada em **Microsserviços**, dividida em três camadas independentes:
 
 ```text
-ready-project/
-├── backend/                    # Servidor Principal Node.js (Express)
-│   ├── src/
-│   │   ├── controllers/        # Lógica de rotas (Upload, Auth, Documentos)
-│   │   ├── prisma/             # Cliente e esquemas do banco de dados
-│   │   └── server.js           # Ponto de entrada do app
-│   ├── uploads/                # Armazenamento temporário de arquivos
-│   ├── package.json
-│   └── .env
-│
-├── frontend/                   # Interface Single Page Application (React)
-│   ├── src/
-│   │   ├── components/         # Componentes de UI (Leitor, Sidebar, Upload)
-│   │   ├── contexts/           # Provedores Globais (Auth, Tema)
-│   │   ├── pages/              # Telas (Dashboard, Biblioteca, Workspace)
-│   │   ├── services/           # Chamadas HTTP via Axios
-│   │   └── main.tsx
-│   ├── package.json
-│   └── .env
-│
-└── pdf-processor/              # Microsserviço de OCR e Extração de PDF (FastAPI)
-    ├── main.py                 # Rotas e regras de limpeza semântica
-    └── requirements.txt        # Dependências mínimas de RAM (pypdf)
+┌────────────────────────────────────────────────────────────────────────┐
+│                          FRONTEND (SPA React)                          │
+│                     Hospedado na Vercel (Produção)                     │
+└──────────────────────────────────┬─────────────────────────────────────┘
+                                   │
+                           HTTPS (JSON / Multipart)
+                                   │
+                                   ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                        BACKEND CENTRAL (Node.js)                       │
+│             Express + Prisma ORM | Hospedado na Render (Web Service)    │
+└──────────────────┬───────────────────────────────┬─────────────────────┘
+                   │                               │
+            Chamada interna (HTTP)         Integração SDK Oficial
+                   │                               │
+                   ▼                               ▼
+┌─────────────────────────────────────┐ ┌────────────────────────────────┐
+│      PROCESSADOR PDF (FastAPI)      │ │     GOOGLE GEMINI IA API       │
+│   Python + pypdf | Hospedado Render │ │   Suporte Cognitivo ao Leitor  │
+└─────────────────────────────────────┘ └────────────────────────────────┘
