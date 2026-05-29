@@ -23,13 +23,9 @@ const JWT_SECRET = process.env.JWT_SECRET || "ready-dev-secret";
 
 // Libera o acesso para o seu domínio da Vercel e mantém o localhost para testes locais
 app.use(cors({
-  origin: [
-    'https://ready-project.vercel.app', 
-    'http://localhost:5173', // Porta padrão do Vite
-    'http://localhost:3000'
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
+  origin: true,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
 }));
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
