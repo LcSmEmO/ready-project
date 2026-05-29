@@ -281,11 +281,13 @@ app.post("/upload-pdf", authenticateUser, upload.single("pdf"), async (req, res)
       const form = new FormData();
       form.append("file", fs.createReadStream(filePath), originalName);
 
+    const pythonUrl = process.env.PYTHON_SERVICE_URL || "https://ready-pdf-processor.onrender.com";
+
     const pythonResponse = await axios.post(
-      "http://127.0.0.1:8000/process-pdf",
+      `${pythonUrl}/process-pdf`,
       form,
       {
-        headers: form.getHeaders(),
+        headers: { ...form.getHeaders() },
       }
     );
 
@@ -900,11 +902,13 @@ app.post("/upload-pdf/temporary", upload.single("pdf"), async (req, res) => {
     const form = new FormData();
     form.append("file", fs.createReadStream(filePath), originalName);
 
+    const pythonUrl = process.env.PYTHON_SERVICE_URL || "https://ready-pdf-processor.onrender.com";
+
     const pythonResponse = await axios.post(
-      "http://127.0.0.1:8000/process-pdf",
+      `${pythonUrl}/process-pdf`,
       form,
       {
-        headers: form.getHeaders(),
+        headers: { ...form.getHeaders() },
       }
     );
 
