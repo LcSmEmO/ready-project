@@ -58,19 +58,6 @@ A plataforma web Read.y serve para transformar a forma como as pessoas consomem 
 
 ---
 
-## 📌 Índice
-* [Visão Geral e Motivação](#-visão-geral-e-motivação)
-* [Arquitetura do Sistema e Fluxo de Dados](#-arquitetura-do-sistema-e-fluxo-de-dados)
-* [Principais Funcionalidades](#-principais-funcionalidades)
-* [Stack Tecnológica e Justificativas](#-stack-tecnológica-e-justificativas)
-* [Estrutura do Projeto](#-estrutura-do-projeto)
-* [Configuração e Execução Local](#-configuração-e-execução-local)
-* [Endpoints e Comunicação entre Serviços](#-endpoints-e-comunicação-entre-serviços)
-* [Otimizações de Infraestrutura (Case Render vs RAM)](#-otimizações-de-infraestrutura-case-render-vs-ram)
-* [Autores e Licença](#-autores-e-licença)
-
----
-
 ## 🏗️ Arquitetura do Sistema e Fluxo de Dados
 
 A aplicação adota uma arquitetura descentralizada baseada em **Microsserviços**, dividida em três camadas independentes:
@@ -129,11 +116,136 @@ Banco de Dados & Serviços
 
 ---
 
-## 🎯 Visão Geral e Motivação
+## ⚙️ Pré-requisitos
+Antes de começar, você precisará ter instalado em sua máquina:
 
-O consumo de materiais digitais em PDF frequentemente esbarra em problemas de acessibilidade, falta de fluidez e fadiga visual. Além disso, a extração de dados brutos desses arquivos costuma trazer ruídos textuais (como hífens órfãos de quebras de linha e símbolos corrompidos).
+- Navegador web moderno (Edge, Chrome, Firefox ou Opera)
 
-O **read.y** resolve esse problema atuando em três frentes:
-1. **Normalização Semântica:** Um microsserviço limpa o texto do documento e o separa logicamente em blocos de parágrafos, títulos e notas de rodapé.
-2. **Interface Adaptativa:** O leitor renderiza esses blocos nativamente, permitindo controle total de progresso, favoritação e marcação de página.
-3. **Cognição Assistida:** O usuário pode interagir diretamente com o conteúdo do livro por meio de um chat contextualizado alimentado por IA.
+- Node.js instalado (Versão 18 ou superior)
+
+- Python instalado (Versão 3.11 ou superior)
+
+- Uma conta ativa no Supabase (para o banco de dados PostgreSQL)
+
+- Uma chave de API válida do Google AI Studio (Gemini API)
+
+- Editor de código recomendado: VS Code
+
+---
+
+## 🛠️ Configuração
+
+1. Acesse o painel do Supabase, crie um novo projeto PostgreSQL e copie a URI de conexão gerada em Database Settings.
+
+2. Acesse o Google AI Studio e gere uma nova chave de API para o modelo Gemini.
+
+3. Crie as tabelas estruturais executando o comando das migrations do Prisma contido no passo abaixo.
+
+---
+
+** 🚦 Como Executar o Projeto
+
+Para rodar o ecossistema completo localmente, você precisará iniciar os três módulos em terminais separados seguindo a ordem abaixo:
+
+### 1. Inicializando o Microsserviço de PDF (Python)
+# Clone o repositório principal
+git clone https://github.com/seu-usuario/ready-project.git
+cd ready-project/pdf-processor
+
+# Crie e ative o ambiente virtual isolado
+python -m venv .venv
+# No Windows:
+.venv\Scripts\Activate.ps1
+# No Linux/Mac:
+source .venv/bin/activate
+
+# Instale as dependências otimizadas de leitura
+pip install -r requirements.txt
+
+# Inicie o servidor FastAPI com recarregamento automático
+uvicorn main:app --host 0.0.0.0 --port 8000
+
+O processador de PDF estará ativo em: http://localhost:8000
+
+### 2. Inicializando o Servidor Central (Backend Node.js)
+# Abra um novo terminal e navegue até a pasta do backend
+cd ready-project/backend
+
+# Instale os pacotes e dependências de rotas
+npm install
+
+# ⚠️ Crie um arquivo chamado .env na pasta backend/ e adicione:
+# DATABASE_URL="sua_string_de_conexao_do_supabase"
+# GEMINI_API_KEY="sua_chave_da_api_do_gemini"
+# JWT_SECRET="uma_chave_aleatoria_para_criptografia_jwt"
+# PYTHON_SERVICE_URL="http://localhost:8000"
+
+# Sincronize os modelos de tabelas do Prisma com o Supabase
+npx prisma migrate dev
+
+# Inicie o servidor local Express
+npm run dev
+
+O backend central estará ativo em: http://localhost:3001
+
+### 3. Inicializando a Interface Web (Frontend React)
+# Abra um terceiro terminal e navegue até a pasta do frontend
+cd ready-project/frontend
+
+# Instale os pacotes de interface
+npm install
+
+# ⚠️ Crie um arquivo chamado .env na pasta frontend/ e adicione:
+# VITE_API_URL="http://localhost:3001"
+
+# Inicie o servidor de desenvolvimento do Vite
+npm run dev
+
+A aplicação web abrirá automaticamente em: http://localhost:5173
+
+---
+
+## 📋 Funcionalidades Detalhadas
+
+### Autenticação e Usuários
+- Cadastro de novos usuários com validação de dados e armazenamento seguro de credenciais
+
+- Login seguro baseado em tokens JWT (JsonWebTokens) com persistência de sessão ativa
+
+- Criptografia unidirecional de senhas com algoritmo bcryptjs antes da gravação no banco
+
+- Gerenciamento de sessão ativa e bloqueio de rotas privadas do ecossistema
+
+### Processamento e Tratamento de PDFs
+
+- Upload de arquivos físicos via formulários multi-partes (multipart/form-data)
+
+- Extração cirúrgica de strings de texto em baixo nível sem sobrecarga de memória RAM
+
+- Tratamento automatizado de ligaduras tipográficas corrompidas no processo de conversão
+
+- Higienização de strings através de expressões regulares para união de palavras com hífens órfãos
+
+- Identificação inteligente e categorização semântica do conteúdo em blocos de títulos, parágrafos e notas de rodapé
+
+### Workspace de Leitura e Biblioteca
+
+- Upload volátil para leitura rápida de documentos diretamente no navegador sem necessidade de conta
+
+- Vinculação persistente de arquivos à estante virtual do usuário autenticado no banco de dados
+
+- Salvamento automático do progresso de leitura contendo o número exato da última página acessada
+
+- Rastreamento preciso do percentual de rolagem e engajamento do leitor por documento
+
+- Sistema de marcação e listagem de arquivos favoritos na biblioteca pessoal
+
+### Inteligência Artificial Assistiva
+
+- Integração nativa com os modelos de linguagem generativa através do SDK do Google Gemini
+
+- Engenharia de prompt contextualizada utilizando os blocos textuais puros extraídos do próprio PDF
+
+- Resposta contextual sem vazamento de escopo externo ao conteúdo contido no livro carregado
+
+---
