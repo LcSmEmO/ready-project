@@ -2,7 +2,7 @@
 
 > Trabalho de Conclusão de Curso (TCC) apresentado ao curso de Bacharelado em Sistemas de Informação — 2026.
 
-O **read.y** é um ecossistema web *full-stack* projetado para revolucionar a forma como estudantes e pesquisadores consomem documentos acadêmicos e livros digitais densos. A plataforma quebra a barreira estática do formato PDF tradicional, convertendo-o em um ambiente de leitura dinâmico, adaptativo e integrado a modelos de Inteligência Artificial Generativa.
+A plataforma web Read.y serve para transformar a forma como as pessoas consomem documentos acadêmicos densos e livros digitais. A ideia central é ir além dos formatos estáticos de PDF, criando um ambiente de leitura dinâmico e adaptável
 
 ---
 
