@@ -143,7 +143,7 @@ Antes de começar, você precisará ter instalado em sua máquina:
 
 ---
 
-** 🚦 Como Executar o Projeto
+## 🚦 Como Executar o Projeto
 
 Para rodar o ecossistema completo localmente, você precisará iniciar os três módulos em terminais separados seguindo a ordem abaixo:
 
