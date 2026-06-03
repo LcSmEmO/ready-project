@@ -1,6 +1,6 @@
 # read.y — Plataforma Web de Leitura Adaptativa Inteligente
 
-> Trabalho de Conclusão de Curso (TCC) apresentado ao curso de Bacharelado em Sistemas de Informação — 2026.
+> Trabalho de Conclusão de Curso (TCC) apresentado ao curso de Bacharelado em Sistema de Informação — 2026.
 
 A plataforma web Read.y serve para transformar a forma como as pessoas consomem documentos acadêmicos densos e livros digitais. A ideia central é ir além dos formatos estáticos de PDF, criando um ambiente de leitura dinâmico e adaptável
 
@@ -148,6 +148,7 @@ Antes de começar, você precisará ter instalado em sua máquina:
 Para rodar o ecossistema completo localmente, você precisará iniciar os três módulos em terminais separados seguindo a ordem abaixo:
 
 ### 1. Inicializando o Microsserviço de PDF (Python)
+````
 # Clone o repositório principal
 git clone https://github.com/seu-usuario/ready-project.git
 cd ready-project/pdf-processor
@@ -164,10 +165,12 @@ pip install -r requirements.txt
 
 # Inicie o servidor FastAPI com recarregamento automático
 uvicorn main:app --host 0.0.0.0 --port 8000
+````
 
 O processador de PDF estará ativo em: http://localhost:8000
 
 ### 2. Inicializando o Servidor Central (Backend Node.js)
+````
 # Abra um novo terminal e navegue até a pasta do backend
 cd ready-project/backend
 
@@ -185,10 +188,11 @@ npx prisma migrate dev
 
 # Inicie o servidor local Express
 npm run dev
-
+````
 O backend central estará ativo em: http://localhost:3001
 
 ### 3. Inicializando a Interface Web (Frontend React)
+````
 # Abra um terceiro terminal e navegue até a pasta do frontend
 cd ready-project/frontend
 
@@ -200,7 +204,7 @@ npm install
 
 # Inicie o servidor de desenvolvimento do Vite
 npm run dev
-
+````
 A aplicação web abrirá automaticamente em: http://localhost:5173
 
 ---
