@@ -6,6 +6,17 @@ A plataforma web Read.y serve para transformar a forma como as pessoas consomem 
 
 ---
 
+#🎥 Vídeo de Apresentação do Projeto
+📌 Assista ao vídeo oficial de apresentação do Moto Help: 👉
+
+---
+
+📸 Capturas de Tela
+
+Tela Inicial
+
+---
+
 ## 📌 Índice
 * [Visão Geral e Motivação](#-visão-geral-e-motivação)
 * [Arquitetura do Sistema e Fluxo de Dados](#-arquitetura-do-sistema-e-fluxo-de-dados)
