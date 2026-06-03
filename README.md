@@ -58,33 +58,34 @@ A plataforma web Read.y serve para transformar a forma como as pessoas consomem 
 
 ---
 
-## 🏗️ Arquitetura do Sistema e Fluxo de Dados
-
-A aplicação adota uma arquitetura descentralizada baseada em **Microsserviços**, dividida em três camadas independentes:
+## 🧩 Estrutura do Projeto
 
 ```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                          FRONTEND (SPA React)                          │
-│                     Hospedado na Vercel (Produção)                     │
-└──────────────────────────────────┬─────────────────────────────────────┘
-                                   │
-                           HTTPS (JSON / Multipart)
-                                   │
-                                   ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│                        BACKEND CENTRAL (Node.js)                       │
-│             Express + Prisma ORM | Hospedado na Render (Web Service)    │
-└──────────────────┬───────────────────────────────┬─────────────────────┘
-                   │                               │
-            Chamada interna (HTTP)         Integração SDK Oficial
-                   │                               │
-                   ▼                               ▼
-┌─────────────────────────────────────┐ ┌────────────────────────────────┐
-│      PROCESSADOR PDF (FastAPI)      │ │     GOOGLE GEMINI IA API       │
-│   Python + pypdf | Hospedado Render │ │   Suporte Cognitivo ao Leitor  │
-└─────────────────────────────────────┘ └────────────────────────────────┘
+ready-project/
+├── backend/                    # Servidor central em Node.js (Express)
+│   ├── src/
+│   │   ├── controllers/        # Controladores com as regras de negócio das rotas
+│   │   ├── middlewares/        # Interceptores de segurança e validação de JWT
+│   │   ├── prisma/             # Configuração do cliente ORM e histórico de migrations
+│   │   └── server.js           # Ponto de entrada e inicialização do app Express
+│   ├── uploads/                # Armazenamento volátil local para arquivos do Multer
+│   ├── package.json            # Dependências e scripts do ecossistema Node
+│   └── .env                    # Variáveis de ambiente locais (não versionado)
+│
+├── frontend/                   # Interface da aplicação SPA em React
+│   ├── src/
+│   │   ├── components/         # Componentes visuais e reutilizáveis da interface
+│   │   ├── contexts/           # Provedores de estado global (Autenticação e Tema)
+│   │   ├── pages/              # Telas da aplicação (Workspace, Biblioteca, Dashboard)
+│   │   ├── services/           # Camada de comunicação HTTP via instâncias Axios
+│   │   └── main.tsx            # Inicialização e renderização do ecossistema React
+│   ├── package.json            # Dependências e scripts de build do Vite
+│   └── .env                    # Chaves de apontamento de API para o frontend
+│
+└── pdf-processor/              # Microsserviço assíncrono de tratamento de documentos
+    ├── main.py                 # API em FastAPI com regras regex de higienização de texto
+    └── requirements.txt        # Dependências mínimas de RAM para produção (pypdf)
 ````
-
 ---
 
 ## 🛠️ Tecnologias Utilizadas
