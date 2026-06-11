@@ -84,7 +84,7 @@ ready-project/
 │
 └── pdf-processor/              # Microsserviço assíncrono de tratamento de documentos
     ├── main.py                 # API em FastAPI com regras regex de higienização de texto
-    └── requirements.txt        # Dependências mínimas de RAM para produção (pypdf)
+    └── requirements.txt        # Dependências mínimas de RAM para produção (unstructured)
 ````
 ---
 
@@ -113,7 +113,7 @@ Banco de Dados & Serviços
 | 	Supabase	| 	Provedor de infraestrutura em nuvem para o banco de dados PostgreSQL	|
 | 	Prisma ORM	| 	Mapeamento e abstração de consultas ao banco de dados relacional	|
 | 	Google Gemini API	| 	Modelo de linguagem inteligente integrado via SDK para assistência cognitiva	|
-| 	pypdf	| 	Biblioteca leve para extração de baixo nível de textos e metadados de PDFs	|
+| 	unstructured	| 	Biblioteca leve para extração de baixo nível de textos e metadados de PDFs	|
 
 ---
 
