@@ -77,7 +77,7 @@ const Index = () => {
               Read.y
             </h1>
           </div>
-          <p className="text-xl text-muted-foreground max-w-lg text-center leading-relaxed relative top-[-50px] left-[180px]">
+          <p className="text-xl text-muted-foreground max-w-lg text-center leading-relaxed relative top-[-80px] left-[230px]">
             Plataforma de leitura adaptativa
           </p>
           <p className="text-sm font-medium tracking-widest uppercase text-primary relative top-[268px]">
